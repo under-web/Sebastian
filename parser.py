@@ -4,10 +4,13 @@ import requests
 from PIL import Image
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
-from views import get_interface
+from views import run_interface
 
 class Spider:
-    def __init__(self, url):
+    """
+    Класс для полученипя данных из сайта по url
+    """
+    def __init__(self, url): # предварительная подготовка
         self.url = url
         ua = UserAgent()
         self.agent = {'User-agent': ua.firefox}
@@ -18,7 +21,7 @@ class Spider:
         r = requests.get(self.url, headers=self.agent)
         return int(r.status_code)
 
-    def get_html(self):
+    def get_html(self): # возвразщает обьект супа
         return self.soup
 
 def safe_image(src):
@@ -42,19 +45,25 @@ def resize_image(input_image_path,
     # resized_image.show()
     resized_image.convert('RGB').save(output_image_path)
 
-
-if __name__ == '__main__':
-
+def get_busines_logic():
     lvl_scare = Spider('https://profinvestment.com/fear-greed-index-bitcoin-cryptocurrency/')
     safe_image(lvl_scare.get_html().find('div', "entry-content clearfix single-post-content").find('img').get('data-src'))
-
-
-
-    bit_url = Spider('https://www.rbc.ru/crypto/currency/btcusd')
-    price_bitcoin =  bit_url.get_html().find('div', class_="chart__subtitle js-chart-value").text.replace(' ', '').split(',')[0].strip() + '$'
-
     resize_image('img.jpg', 'new_img.png', (200,200))
     os.remove('img.jpg')
 
+    bit_url = Spider('https://www.rbc.ru/crypto/currency/btcusd')
+    price_bitcoin =  bit_url.get_html().find('div', class_="chart__subtitle js-chart-value").text.replace(' ', '').split(',')[0].strip() + ' $'
 
-    get_interface(price_bitcoin)
+    usd_url = Spider('https://quote.rbc.ru/ticker/72413')
+    price_usd = usd_url.get_html().find('div', class_="chart__info__row js-ticker").text.strip()[1:3] + ' Р'
+
+
+    run_interface(price_bitcoin,
+                  price_usd)
+
+
+if __name__ == '__main__':
+    get_busines_logic()
+
+
+
