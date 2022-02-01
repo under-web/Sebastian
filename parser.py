@@ -4,7 +4,7 @@ import requests
 from PIL import Image
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
-from views import run_interface
+
 
 class Spider:
     """
@@ -57,9 +57,8 @@ def get_busines_logic():
     usd_url = Spider('https://quote.rbc.ru/ticker/72413')
     price_usd = usd_url.get_html().find('div', class_="chart__info__row js-ticker").text.strip()[1:3] + ' Р'
 
+    return [price_bitcoin, price_usd]
 
-    run_interface(price_bitcoin,
-                  price_usd)
 
 
 if __name__ == '__main__':
