@@ -10,7 +10,7 @@ col_1 = [
 col_2 = [
     [sg.Text('', key='-USD-')],
 ]
-col_image = [[sg.Image('new_img.png', key='-image-', visible=False)]]
+col_image = [[sg.Image('img.png', key='-image-', visible=False)]]
 
 layout = [[sg.Frame(layout=col_image, title='Уровень страха/жадности')],
           [sg.Frame(layout=col_1, title='Bitcoin '), sg.Frame(layout=col_2, title='Dollar ')],
@@ -28,5 +28,6 @@ while True:
         result = parser.get_busines_logic()
         window['-priceBit-'].update(result[0])
         window['-USD-'].update(result[1])
-        window['-image-'].update(visible=True)
+        window['-image-'].update(filename='img.png', visible=True)
+        window.enable()
 window.close()

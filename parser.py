@@ -45,10 +45,23 @@ def resize_image(input_image_path,
     # resized_image.show()
     resized_image.convert('RGB').save(output_image_path)
 
+def get_news_crypto():
+    crypt = Spider('https://ru.investing.com/news/cryptocurrency-news')
+    urls_news = crypt.get_html().find('div', class_='largeTitle').find_all('a')
+    for i in urls_news:
+
+        title = i.get('title')
+        link = i.get('href')
+        if title and link:
+            if 'news' in link:
+                print(title, 'https://ru.investing.com' + link)
+            else:
+                print(title, link)
+
 def get_busines_logic():
     lvl_scare = Spider('https://profinvestment.com/fear-greed-index-bitcoin-cryptocurrency/')
     safe_image(lvl_scare.get_html().find('div', "entry-content clearfix single-post-content").find('img').get('data-src'))
-    resize_image('img.jpg', 'new_img.png', (200,200))
+    resize_image('img.jpg', 'img.png', (200,200))
     os.remove('img.jpg')
 
     bit_url = Spider('https://www.rbc.ru/crypto/currency/btcusd')
@@ -57,12 +70,14 @@ def get_busines_logic():
     usd_url = Spider('https://quote.rbc.ru/ticker/72413')
     price_usd = usd_url.get_html().find('div', class_="chart__info__row js-ticker").text.strip()[1:3] + ' Р'
 
+
+
     return [price_bitcoin, price_usd]
 
 
 
 if __name__ == '__main__':
-    get_busines_logic()
-
+    # get_busines_logic()
+    get_news_crypto()
 
 
